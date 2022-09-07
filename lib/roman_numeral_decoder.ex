@@ -14,17 +14,13 @@ defmodule RomanNumeralDecoder do
   }
 
   def decode(numerals) do
-    numeral_value_list =
-      numerals
-      |> String.codepoints()
-      |> Enum.map(&@roman_numeral_map[&1])
-
-    decode_recursive(numeral_value_list, 0)
+    numerals
+    |> String.codepoints()
+    |> Enum.map(&@roman_numeral_map[&1])
+    |> decode_recursive(0)
   end
 
-
   defp decode_recursive([], total), do: total
-
   defp decode_recursive([value], total), do: total + value
 
   defp decode_recursive([first, second | tail], total) do
@@ -32,9 +28,5 @@ defmodule RomanNumeralDecoder do
       second > first -> decode_recursive(tail, total + second - first)
       true -> decode_recursive([second | tail], total + first)
     end
-  end
-
-  defp numeral_char_to_int(char) do
-    @roman_numeral_map[char]
   end
 end
