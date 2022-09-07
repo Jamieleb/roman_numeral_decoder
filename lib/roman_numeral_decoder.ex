@@ -22,19 +22,19 @@ defmodule RomanNumeralDecoder do
     decode_recursive(numeral_value_list, 0)
   end
 
-  def decode_recursive([], total), do: total
 
-  def decode_recursive([value], total), do: total + value
+  defp decode_recursive([], total), do: total
 
-  def decode_recursive([first, second | tail], total) do
-    if second > first do
-      decode_recursive(tail, total + second - first)
-    else
-      decode_recursive([second | tail], total + first)
+  defp decode_recursive([value], total), do: total + value
+
+  defp decode_recursive([first, second | tail], total) do
+    cond do
+      second > first -> decode_recursive(tail, total + second - first)
+      true -> decode_recursive([second | tail], total + first)
     end
   end
 
-  def numeral_char_to_int(char) do
+  defp numeral_char_to_int(char) do
     @roman_numeral_map[char]
   end
 end
