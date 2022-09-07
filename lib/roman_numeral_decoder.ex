@@ -13,21 +13,24 @@ defmodule RomanNumeralDecoder do
     "M" => 1000
   }
 
-  def decode(numerals, total \\ 0)
-  def decode("", total), do: total
+  def decode(numerals) do
+    numeral_value_list =
+      numerals
+      |> String.codepoints()
+      |> Enum.map(&@roman_numeral_map[&1])
 
-  def decode(numerals, total) when byte_size(numerals) == 1,
-    do: total + numeral_char_to_int(numerals)
+    decode_recursive(numeral_value_list, 0)
+  end
 
-  def decode(numerals, total) do
-    [first, second | tail] = String.codepoints(numerals)
+  def decode_recursive([], total), do: total
 
-    [first_value, second_value] = Enum.map([first, second], &numeral_char_to_int/1)
+  def decode_recursive([value], total), do: total + value
 
-    if second_value > first_value do
-      decode(Enum.join(tail, ""), total + second_value - first_value)
+  def decode_recursive([first, second | tail], total) do
+    if second > first do
+      decode_recursive(tail, total + second - first)
     else
-      decode(Enum.join([second | tail], ""), total + first_value)
+      decode_recursive([second | tail], total + first)
     end
   end
 
